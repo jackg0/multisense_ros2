@@ -34,45 +34,59 @@ find_package(tf2_geometry_msgs REQUIRED)
 
 include_directories(include)
 
-add_library(${PROJECT_NAME} src/camera.cpp
-                            src/camera_utilities.cpp
-                            src/config.cpp
-                            src/imu.cpp
-                            src/laser.cpp
-                            src/parameter_utilities.cpp
-                            src/point_cloud_utilities.cpp
-                            src/pps.cpp
-                            src/status.cpp)
+add_library(multisense_ros SHARED
+    src/camera.cpp
+    src/camera_utilities.cpp
+    src/config.cpp
+    src/imu.cpp
+    src/laser.cpp
+    src/parameter_utilities.cpp
+    src/point_cloud_utilities.cpp
+    src/pps.cpp
+    src/status.cpp)
 
 string(TOUPPER "ROS_$ENV{ROS_DISTRO}" ROS_DISTRO)
-target_compile_definitions(${PROJECT_NAME} PRIVATE ${ROS_DISTRO}=1)
+target_compile_definitions(multisense_ros PRIVATE ${ROS_DISTRO}=1)
 
-ament_target_dependencies(${PROJECT_NAME}
-                         angles
-                         Eigen3
-                         geometry_msgs
-                         image_geometry
-                         multisense_lib
-                         multisense_msgs
-                         OpenCV
-                         rclcpp
-                         sensor_msgs
-                         stereo_msgs
-                         tf2
-                         tf2_ros
-                         tf2_geometry_msgs)
+ament_target_dependencies(multisense_ros
+    angles
+    Eigen3
+    geometry_msgs
+    image_geometry
+    multisense_lib
+    multisense_msgs
+    OpenCV
+    rclcpp
+    sensor_msgs
+    stereo_msgs
+    tf2
+    tf2_ros
+    tf2_geometry_msgs)
 
 
 add_executable(ros_driver src/ros_driver.cpp)
-target_link_libraries(ros_driver ${PROJECT_NAME})
+target_link_libraries(ros_driver multisense_ros)
 
 ament_target_dependencies(ros_driver
                          rclcpp)
 
-install(TARGETS ros_driver
-        DESTINATION lib/${PROJECT_NAME})
-
-install(DIRECTORY launch materials meshes urdf
-        DESTINATION share/${PROJECT_NAME})
+ament_export_libraries(multisense_ros)
+ament_export_targets(multisense_ros)
 
 ament_package()
+
+install(TARGETS ros_driver
+        DESTINATION lib/multisense_ros)
+
+install(TARGETS multisense_ros
+    EXPORT multisense_ros
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+    INCLUDES DESTINATION include
+)
+
+install(DIRECTORY launch materials meshes urdf
+        DESTINATION share/multisense_ros)
+
+install(DIRECTORY include/multisense_ros
+        DESTINATION include)
