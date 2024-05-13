@@ -25,14 +25,14 @@ find_package(ament_cmake REQUIRED)
 
 add_subdirectory(LibMultiSense)
 
-ament_export_include_directories(${CMAKE_CURRENT_SOURCE_DIR}/LibMultiSense/source/LibMultiSense/include)
 ament_export_libraries(MultiSense)
+ament_export_targets(MultiSense)
 
 ament_package()
 
 install(
-    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/LibMultiSense/source/LibMultiSense/include
-    DESTINATION include/MultiSense
+    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/LibMultiSense/source/LibMultiSense/include/MultiSense
+    DESTINATION include
 )
 
 install(
@@ -40,4 +40,5 @@ install(
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin
+    INCLUDES DESTINATION include
 )
