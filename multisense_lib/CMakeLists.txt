@@ -29,3 +29,15 @@ ament_export_include_directories(${CMAKE_CURRENT_SOURCE_DIR}/LibMultiSense/sourc
 ament_export_libraries(MultiSense)
 
 ament_package()
+
+install(
+    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/LibMultiSense/source/LibMultiSense/include
+    DESTINATION include/MultiSense
+)
+
+install(
+    TARGETS MultiSense EXPORT MultiSense
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+    RUNTIME DESTINATION bin
+)
